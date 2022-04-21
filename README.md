@@ -10,8 +10,8 @@ This project was built using [Laravel Sail](https://laravel.com/docs/9.x/sail#ma
 - Configure your MySQL connection using the credentials provided in `.env` and create a schema/database named `legacy`
 - `php artisan sail:install` and choose `mysql`
 - Run `./vendor/bin/sail artisan migrate`
-- `./vendor/bin/sail npm install && npm run dev`
 - Open your browser and head to `legacy.test` or `localhost`
+- Run `./vendor/bin/sail artisan test`
 
 
 ## Task
