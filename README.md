@@ -1,64 +1,38 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+## Setup
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This project was built using [Laravel Sail](https://laravel.com/docs/9.x/sail#main-content). It's recommended that you have Docker installed before continuing.
+- `git clone https://github.com/RedArchon/legacy.git`
+- create a copy of `.env.example` and name the file `.env`
+- cd into the new project's directory and run `composer install`
+- `php artisan key:generate`
+- `./vendor/bin/sail up` if you encounter any errors, use the step below to clear the cache.
+- `./vendor/bin/sail build --no-cache` or use whichever alias you may have set for `./vendor/bin/sail` and then 
+- Configure your MySQL connection using the credentials provided in `.env` and create a schema/database named `legacy`
+- `php artisan sail:install` and choose `mysql`
+- Run `./vendor/bin/sail artisan migrate`
+- `./vendor/bin/sail npm install && npm run dev`
+- Open your browser and head to `legacy.test` or `localhost`
 
-## About Laravel
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Task: 
+1. Create an endpoint called `api/reminders/schedule` 
+2. Add a custom middleware for this endpoint that checks the header `X-SCHEDULER-HEADER` to be `secret!` otherwise do not allow the request to go through 
+3. Create a controller and handler method 
+4. Validate that the request has the correct payload: 
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+```
+channel - should be string, required and in the list "mail, database"
+message - should be string, required, max 256
+time - should be a date time ISO
+email - should be email and optional, required only if the `channel` is mail 
+```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+1. Create a migration for a new table called `schedulers` with the columns above. Add some more status columns to the migration (`sent_at` `failed_at` )
+2. Create a model with the columns above 
+3. Store the request payload into the database
+4. Create a scheduler command that runs hourly and checks for unsent notifications the notifications to be sent this hour. The `unsent notifications` should be filtered using a model local scope called `scopeReady` and filter them there  
+5. In the command check the `channel` type and send the notification using `Notification` facade
+6. Create a generic mailable class that sends the email in case the channel is email. The email should be queued into the `emails` queue
+7. Create a generic notification to send the notification into the database in case the channel requires that
+8. Create a test using PHPUnit that ensures the notification is sent through.
 
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
