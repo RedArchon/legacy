@@ -11,7 +11,7 @@ This project was built using [Laravel Sail](https://laravel.com/docs/9.x/sail#ma
 - `php artisan sail:install` and choose `mysql`
 - Run `./vendor/bin/sail artisan migrate`
 - Open your browser and head to `legacy.test` or `localhost`
-- Run `./vendor/bin/sail artisan test`
+- Run `./vendor/bin/sail artisan test` once you've configured the appropriate interpreter.
 
 
 ## Task
