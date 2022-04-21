@@ -14,7 +14,7 @@ This project was built using [Laravel Sail](https://laravel.com/docs/9.x/sail#ma
 - Open your browser and head to `legacy.test` or `localhost`
 
 
-Task: 
+## Task
 1. Create an endpoint called `api/reminders/schedule` 
 2. Add a custom middleware for this endpoint that checks the header `X-SCHEDULER-HEADER` to be `secret!` otherwise do not allow the request to go through 
 3. Create a controller and handler method 
